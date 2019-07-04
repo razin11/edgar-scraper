@@ -1,1 +1,1 @@
-# edgar_scraper
+# edgar-scraper
