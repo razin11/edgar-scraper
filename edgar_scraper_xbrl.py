@@ -9,44 +9,31 @@ import pandas as pd
 import numpy as np
 import urllib.request, urllib.parse, urllib.error
 from bs4 import BeautifulSoup
-import re
 import pymysql
 from  sqlalchemy import create_engine
-import lxml
 import xml.etree.ElementTree as ET
-import json
 import datetime
 import time
 
 from functools import reduce
 
-conn = pymysql.connect(host = "", user = "", passwd = "")
+conn = pymysql.connect(host = [host_name], user = [user_name], passwd = [password])
 cur = conn.cursor()
 
-## Only used when creating the database
-# cur.execute("create database financial_database")
-
-# Using the cursor object created above to use the database file financial_database1
-cur.execute("use financial_database1")
+cur.execute("use [database_name]")
 
 #cur.execute("drop table if exists symbol")
 #cur.execute("create table symbol (id INTEGER PRIMARY KEY AUTO_INCREMENT UNIQUE, ticker VARCHAR (64), security VARCHAR(255), sector VARCHAR (64), sub_sector VARCHAR(255), headquarter VARCHAR (255), CIK VARCHAR(255))")
  
- # Create an engine object to import dataframe directly to the database
-engine = create_engine("")
-
-#cd C:\Users\ABMRazin\Documents\Axiom Data Company
-#import wikitable_scraper as ws
+engine = create_engine("mysql+pymysql://[user]: [password]@[host_name]: [port]/[database_name]")
 
 def sp500_cik():
     
+
+#    The function grabs stock IDs, symbols and CIKs from the database
+#    and put them in a list
     
-    """
-    The function grabs stock IDs, symbols and CIKs from the database
-    and put them in a list
-    """
-    
-    
+                            
     df = pd.read_sql_table("symbol", con = engine)
     cik_lst = []
     ticker_lst = []
@@ -62,16 +49,14 @@ def sp500_cik():
 
 
 def first_scraper(urlname1):
+
+
+#    The function takes a url as a parameter, (example url:
+#    https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000764180&type=10-K&dateb=&owner=exclude&count=40)
+#    extract the urls of 10Ks and 10Qs from the initial page
+#    and convert it into executable urls and append them in a list
     
-    
-    """
-    The function takes a url as a parameter, (example url:
-    https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000764180&type=10-K&dateb=&owner=exclude&count=40)
-    extract the urls of 10Ks and 10Qs from the initial page
-    and convert it into executable urls and append them in a list
-    """
-    
-    
+        
     filings = []
     url_lst = []
     html1 = urllib.request.urlopen(urlname1).read()
@@ -94,16 +79,15 @@ def first_scraper(urlname1):
 
 #x = first_scraper("https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000764180&type=10-K&dateb=&owner=exclude&count=40")
 
+
 def second_scraper(urlname2):
     
     
-    """
-    The function takes a url as a parameter, (examle url: 
-    https://www.sec.gov/Archives/edgar/data/55785/000005578519000032/0000055785-19-000032-index.htm)
-    extracts the xbrl_link, report date and report period from the page and returns them as string
-    """
-        
-        
+#    The function takes a url as a parameter, (examle url: 
+#    https://www.sec.gov/Archives/edgar/data/55785/000005578519000032/0000055785-19-000032-index.htm)
+#    extracts the xbrl_link, report date and report period from the page and returns them as string
+
+
     html2 = urllib.request.urlopen(urlname2).read()
     soup2 = BeautifulSoup(html2, 'html.parser')
     try:
@@ -132,29 +116,18 @@ def second_scraper(urlname2):
     return xbrl_link, report_date, report_period
 
 # x = second_scraper("https://www.sec.gov/Archives/edgar/data/1551152/000155115219000008/0001551152-19-000008-index.htm")
-
-#d1 = "2016-10-01"
-#d2 = "2017-06-30"
-#d1 = datetime.datetime.strptime(d1, "%Y-%m-%d")
-#d2 = datetime.datetime.strptime(d2, "%Y-%m-%d")
-#
-#days = d2 - d1
-#print (days.days)
-# dei_lst = ["{http://xbrl.sec.gov/dei/2009-01-31}", "{http://xbrl.sec.gov/dei/2010-01-31}", "{http://xbrl.sec.gov/dei/2011-01-31}", "{http://xbrl.sec.gov/dei/2012-01-31}", "{http://xbrl.sec.gov/dei/2013-01-31}", "{http://xbrl.sec.gov/dei/2014-01-31}", "{http://xbrl.sec.gov/dei/2015-01-31}", "{http://xbrl.sec.gov/dei/2016-01-31}", "{http://xbrl.sec.gov/dei/2017-01-31}", "{http://xbrl.sec.gov/dei/2018-01-31}", "{http://xbrl.sec.gov/dei/2019-01-31}"]
-           
+   
 
 def xbrl_scraper(urlname2, report_type):
 
 
-    """
-    The heart of the program. The function xbrl_scraper takes the financial statement xml file url
-    and type of report as arguments, which has already been scraped using the previous two functions.
-    It initates a master dictionary that include three other dictionaries (branch dictionaries) - 
-    IS dictionary, BS dictionary and CFS dictionary. The function than searches for income statement, 
-    balance sheet and cash flow statement items in that order for the specific quarter/year the 
-    document is representing and update the respective dictionaries once the items are found. 
-    When a branch dictionary is completed, master dictioanry is updated with branch. 
-    """" 
+#    The heart of the program. The function xbrl_scraper takes the financial statement xml file url
+#    and type of report as arguments, which has already been scraped using the previous two functions.
+#    It initates a master dictionary that include three other dictionaries (branch dictionaries) - 
+#    IS dictionary, BS dictionary and CFS dictionary. The function than searches for income statement, 
+#    balance sheet and cash flow statement items in that order for the specific quarter/year the 
+#    document is representing and update the respective dictionaries once the items are found. 
+#    When a branch dictionary is completed, master dictioanry is updated with branch. 
     
     
     # Calls the second_scraper function - see description above"
@@ -239,7 +212,7 @@ def xbrl_scraper(urlname2, report_type):
             except:
                 continue
 
-# 
+
         elif "Y" in context.get("id") and "D" in context.get("id") and "_" not in context.get("id"):
 #            print ("First if worked")
             period = context.find("{http://www.xbrl.org/2003/instance}period")
@@ -1215,12 +1188,11 @@ def xbrl_scraper(urlname2, report_type):
 def df_merge(df_is, df_bs, df_cfs):
     
     
-    """
-    The function df_merge makes sure the data in each df_is, df_bs and df_cfs dataframes are orderly
-    and same format and compatible for pushing it to the database. It handles missing data, changes all data
-    to one format and adds columns of zeroes when a column is not available for one company so that all
-    companies have exactly same no. of columns
-    """"
+#    The function df_merge makes sure the data in each df_is, df_bs and df_cfs dataframes are orderly
+#    and same format and compatible for pushing it to the database. It handles missing data, changes all data
+#    to one format and adds columns of zeroes when a column is not available for one company so that all
+#    companies have exactly same no. of columns
+
 
     ######### INCOME STATEMENT TTM #################
     dfis = df_is
@@ -1537,12 +1509,10 @@ def df_merge(df_is, df_bs, df_cfs):
 # df_ttm
 
 def database(df_is, df_bs, df_cfs): 
-
     
-    """
-    The function pushes the completed dataframe of income statement, balance sheet and cash flow statement
-    into the database
-    """
+
+#    The function pushes the completed dataframe of income statement, balance sheet and cash flow statement
+#    into the database
     
     
     df_is.to_sql(name = "income_statement", con = engine, if_exists = "append")
@@ -1558,19 +1528,17 @@ def database(df_is, df_bs, df_cfs):
 
 def edgar_crawler():
     
-    
-    """
-    The function edgar_crawler pulls all the functions together. It starts with calling the sp500_cik
-    which contains ciks, tickers and ids (alternative forms are available for this, see my wiki scraper).
-    It then creates an url from the base url which becomes the argument for the first function first_scraper.
-    Then second_scraper is called in a loop which opens every 10-K and 10-Q one at a time and starts 
-    scraping the data from each filing using the edgar_crawler function. Once the is_dct, bs_dct and cfs_dct
-    is returned by the edgar_scraper, it is appended into the respective empty dictionaries. Then the 
-    df_merge function is called to do the formating. Once formating is complete, df_is, df_bs and df_cfs 
-    is pushed into the dataframe using the database function.  
-    Note that it's currently structured particularly to append non existing data to the database i.e.
-    new quarters or anuuals
-    """
+
+#    The function edgar_crawler pulls all the functions together. It starts with calling the sp500_cik
+#    which contains ciks, tickers and ids (alternative forms are available for this, see my wiki scraper).
+#    It then creates an url from the base url which becomes the argument for the first function first_scraper.
+#    Then second_scraper is called in a loop which opens every 10-K and 10-Q one at a time and starts 
+#    scraping the data from each filing using the edgar_crawler function. Once the is_dct, bs_dct and cfs_dct
+#    is returned by the edgar_scraper, it is appended into the respective empty dictionaries. Then the 
+#    df_merge function is called to do the formating. Once formating is complete, df_is, df_bs and df_cfs 
+#    is pushed into the dataframe using the database function.  
+#    Note that it's currently structured particularly to append non existing data to the database i.e.
+#    new quarters or anuuals
     
     
     count = 0
@@ -1581,20 +1549,25 @@ def edgar_crawler():
     
     url = "https://www.sec.gov/cgi-bin/browse-edgar"
     x = 0
-    for cik in ciks[x:x+505]:
+    COMPANIES_TO_RUN = 1
+    for cik in ciks[x:x + COMPANIES_TO_RUN]:
         
         # Get all the quarters currently in the database
-        cur.execute("select report_period from income_statement where ticker = (%s)", (tickers[x],))
-        data = cur.fetchall()
         date_lst = []
-        for date in data:
-            try:
-                date = date[0].strftime("%Y-%m-%d")
-                date_lst.append(date)
-            except:
-                continue
-            
-        print (date_lst)
+        try:            
+            cur.execute("select report_period from income_statement where ticker = (%s)", (tickers[x],))
+            data = cur.fetchall()
+            for date in data:
+                try:
+                    date = date[0].strftime("%Y-%m-%d")
+                    date_lst.append(date)
+                except:
+                    continue
+                
+            print (date_lst)
+        
+        except:
+            pass
 
         report_lst = ["10-Q", "10-K"]
 #        report_lst = ["10-Q"]
@@ -1605,7 +1578,7 @@ def edgar_crawler():
         
         for report_type in report_lst:
             if report_type == "10-Q":
-                count = 10
+                count = 40
                 
                 params = {'action': 'getcompany', 'CIK': cik, 'type': report_type, 'dateb': '', 'owner': 'exclude', 'count': count}
                 url_parts = list(urllib.parse.urlparse(url))
@@ -1615,9 +1588,11 @@ def edgar_crawler():
                 urlname1 = urllib.parse.urlunparse(url_parts)
                 page1 = first_scraper(urlname1)
                 report_links = page1[1]
-#                print (report_links)
                 
-                for urlname2 in report_links[0:4]:
+                quarter_start = 0
+                quarter_end = 4
+                
+                for urlname2 in report_links[quarter_start:quarter_end]:
 #                    print (urlname2)
                     try:                        
                         report_period = second_scraper(urlname2)[2]
@@ -1678,9 +1653,12 @@ def edgar_crawler():
                 url_parts[4] = urllib.parse.urlencode(query)
                 urlname1 = urllib.parse.urlunparse(url_parts)
                 page1 = first_scraper(urlname1)
-                report_links = page1[1]        
+                report_links = page1[1]
+                
+                annual_start = 0
+                annual_end = 2
         
-                for urlname2 in report_links[0:2]:
+                for urlname2 in report_links[annual_start:annual_end]:
                     try:
                         report_period = second_scraper(urlname2)[2]
                         print (report_period)
