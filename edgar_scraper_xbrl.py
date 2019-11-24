@@ -150,7 +150,7 @@ def xbrl_scraper(urlname2, report_type):
     balance sheet and cash flow statement items in that order for the specific quarter/year the 
     document is representing and update the respective dictionaries once the items are found. 
     When a branch dictionary is completed, master dictioanry is updated with branch. 
-    """"    
+    """" 
     
     
     # Calls the second_scraper function - see description above"
