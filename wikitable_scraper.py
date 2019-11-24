@@ -140,14 +140,3 @@ def wiki_table(url, table_index):
 #        
 #print (cik_lst)
 #len(cik_lst)
-    
-    
-
-
-
-
-
-
-
-
-
