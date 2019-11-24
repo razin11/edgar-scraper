@@ -17,15 +17,15 @@ import time
 
 from functools import reduce
 
-conn = pymysql.connect(host = "localhost", user = "root", passwd = "13Tallabagh")
+conn = pymysql.connect(host = [host_name], user = [user_name], passwd = [password])
 cur = conn.cursor()
 
-cur.execute("use fd_trial")
+cur.execute("use [database_name]")
 
 #cur.execute("drop table if exists symbol")
 #cur.execute("create table symbol (id INTEGER PRIMARY KEY AUTO_INCREMENT UNIQUE, ticker VARCHAR (64), security VARCHAR(255), sector VARCHAR (64), sub_sector VARCHAR(255), headquarter VARCHAR (255), CIK VARCHAR(255))")
  
-engine = create_engine("mysql+pymysql://root: 13Tallabagh@localhost: 3306/fd_trial")
+engine = create_engine("mysql+pymysql://[user]: [password]@[host_name]: [port]/[database_name]")
 
 def sp500_cik():
     
