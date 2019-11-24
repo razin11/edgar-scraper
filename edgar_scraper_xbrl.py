@@ -23,12 +23,16 @@ from functools import reduce
 conn = pymysql.connect(host = "", user = "", passwd = "")
 cur = conn.cursor()
 
+## Only used when creating the database
 # cur.execute("create database financial_database")
+
+# Using the cursor object created above to use the database file financial_database1
 cur.execute("use financial_database1")
 
 #cur.execute("drop table if exists symbol")
 #cur.execute("create table symbol (id INTEGER PRIMARY KEY AUTO_INCREMENT UNIQUE, ticker VARCHAR (64), security VARCHAR(255), sector VARCHAR (64), sub_sector VARCHAR(255), headquarter VARCHAR (255), CIK VARCHAR(255))")
  
+ # Create an engine object to import dataframe directly to the database
 engine = create_engine("")
 
 #cd C:\Users\ABMRazin\Documents\Axiom Data Company
