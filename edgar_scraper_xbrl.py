@@ -35,8 +35,6 @@ cur.execute("use financial_database1")
  # Create an engine object to import dataframe directly to the database
 engine = create_engine("")
 
-#cd C:\Users\ABMRazin\Documents\Axiom Data Company
-#import wikitable_scraper as ws
 
 def sp500_cik():
     
