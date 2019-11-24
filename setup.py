@@ -10,16 +10,15 @@ Created on Sun Nov 24 08:57:45 2019
 import pymysql
 from  sqlalchemy import create_engine
 
-conn = pymysql.connect(host = "localhost", user = "root", passwd = "13Tallabagh")
+conn = pymysql.connect(host = [host_name], user = [user_name], passwd = [password])
 cur = conn.cursor()
 
-cur.execute("create database fd_trial")
-cur.execute("use fd_trial")
+cur.execute("create database [database_name]")
+cur.execute("use [database_name]")
 
-engine = create_engine("mysql+pymysql://root: 13Tallabagh@localhost: 3306/fd_trial")
+engine = create_engine("mysql+pymysql://[user_name]: [password]@[host_name]: [port]/[database_name]")
 
 # cd "path to where you have saved wikitable_scraper file"
-cd C:\Users\ABMRazin\Documents\Cousera\py4e\webscraping_practice\wikitable_scraper
 import wikitable_scraper as ws
 
 def sp500_database():
