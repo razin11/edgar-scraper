@@ -1548,9 +1548,9 @@ def edgar_crawler():
     ids = metadata[2]
     
     url = "https://www.sec.gov/cgi-bin/browse-edgar"
-    START_SYMBOLID = 0
+    IDX = 0
     COMPANIES_TO_RUN = 1
-    for cik in ciks[START_SYMBOLID:START_SYMBOLID + COMPANIES_TO_RUN]:
+    for cik in ciks[IDX:IDX + COMPANIES_TO_RUN]:
         
         # Get all the quarters currently in the database
         date_lst = []
@@ -1708,18 +1708,18 @@ def edgar_crawler():
                         continue
         
         df_is["cik"] = [cik for i in range (len(df_is))]
-        df_is["ticker"] = [tickers[x] for i in range(len(df_is))]
-        df_is["symbol_id"] = [ids[x] for i in range(len(df_is))]
+        df_is["ticker"] = [tickers[IDX] for i in range(len(df_is))]
+        df_is["symbol_id"] = [ids[IDX] for i in range(len(df_is))]
 #        df_is = df_is.dropna(thresh = 5)
         
         df_bs["cik"] = [cik for i in range (len(df_bs))]
-        df_bs["ticker"] = [tickers[x] for i in range(len(df_bs))]
-        df_bs["symbol_id"] = [ids[x] for i in range(len(df_bs))]
+        df_bs["ticker"] = [tickers[IDX] for i in range(len(df_bs))]
+        df_bs["symbol_id"] = [ids[IDX] for i in range(len(df_bs))]
 #        df_bs = df_bs.dropna(thresh = 5)
         
         df_cfs["cik"] = [cik for i in range (len(df_cfs))]
-        df_cfs["ticker"] = [tickers[x] for i in range(len(df_cfs))]
-        df_cfs["symbol_id"] = [ids[x] for i in range(len(df_cfs))]
+        df_cfs["ticker"] = [tickers[IDX] for i in range(len(df_cfs))]
+        df_cfs["symbol_id"] = [ids[IDX] for i in range(len(df_cfs))]
 #        df_cfs = df_cfs.dropna(thresh = 5)
         
 #        df_ttm = df_merge(df_is, df_bs, df_cfs)
@@ -1733,7 +1733,7 @@ def edgar_crawler():
         database(df_is, df_bs, df_cfs)
         
 #        print ("symbol_id:", x)
-        x += 1
+        IDX += 1
                 
     return df_is, df_bs, df_cfs
 
