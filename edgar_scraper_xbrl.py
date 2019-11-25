@@ -1548,9 +1548,9 @@ def edgar_crawler():
     ids = metadata[2]
     
     url = "https://www.sec.gov/cgi-bin/browse-edgar"
-    x = 0
+    START_SYMBOLID = 0
     COMPANIES_TO_RUN = 1
-    for cik in ciks[x:x + COMPANIES_TO_RUN]:
+    for cik in ciks[START_SYMBOLID:START_SYMBOLID + COMPANIES_TO_RUN]:
         
         # Get all the quarters currently in the database
         date_lst = []
