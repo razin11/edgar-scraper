@@ -1526,7 +1526,7 @@ def database(df_is, df_bs, df_cfs):
     return 0
 
 
-def edgar_crawler():
+def edgar_crawler(IDX, COMPANIES_TO_RUN):
     
 
 #    The function edgar_crawler pulls all the functions together. It starts with calling the sp500_cik
@@ -1548,14 +1548,14 @@ def edgar_crawler():
     ids = metadata[2]
     
     url = "https://www.sec.gov/cgi-bin/browse-edgar"
-    IDX = 0
-    COMPANIES_TO_RUN = 1
+    # IDX = 0
+    # COMPANIES_TO_RUN = 1
     for cik in ciks[IDX:IDX + COMPANIES_TO_RUN]:
         
         # Get all the quarters currently in the database
         date_lst = []
         try:            
-            cur.execute("select report_period from income_statement where ticker = (%s)", (tickers[x],))
+            cur.execute("select report_period from income_statement where ticker = (%s)", (tickers[IDX],))
             data = cur.fetchall()
             for date in data:
                 try:
@@ -1737,8 +1737,9 @@ def edgar_crawler():
                 
     return df_is, df_bs, df_cfs
 
-
-dfs = edgar_crawler()
+# edgar_crawler takes arg IDX, which is the id of the company in the db to start scraping and COMPANIES_TO_RN, which is 
+# the no. of companies to scrape since start
+dfs = edgar_crawler(IDX = ["id of company you want to start with"], COMPANIES_TO_RUN = ["no. of companies you want to run"])
 
 
 ## Simple database queries for the financial database
