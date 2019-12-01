@@ -1194,7 +1194,7 @@ def df_merge(df_is, df_bs, df_cfs):
 #    companies have exactly same no. of columns
 
 
-    ######### INCOME STATEMENT TTM #################
+    ######### INCOME STATEMENT #################
     dfis = df_is
     dfis = dfis.dropna(thresh = 6)
 

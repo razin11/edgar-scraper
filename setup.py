@@ -43,9 +43,9 @@ def sp500_database():
 df = sp500_database()
 
 ###### Things to note #######
-# The pupose of this .py file is to create a table that include metadata for all S&P 500 companies 
-# and import to the database. However, MySQL needs to be setup before the import can be done.
-# Also note wikitable_scraper need to be in a valid location and the path needs to be assigned
+# The pupose of this .py file is to create a table that includes metadata for all S&P 500 companies 
+# and export it to the database. However, MySQL needs to be setup before the export can be done.
+# Also note wikitable_scraper need to be in a valid location and the path needs to be assigned.
 # For the database, creating the engine object is critical for direct importation of the dataframe to database.
 # create_engine module from sqlalchemy is used for this purpose, which requires specific path identification
 # Format for create_engine:
