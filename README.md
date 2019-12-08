@@ -14,5 +14,5 @@ The current scraper is quite slow right now since a lot of variation is tested f
 
 RELATED PROJECTS
 
-I am also working on several other projects, which will be uploaded soon. Highly complementary to this repo will be a security price repo. Combining these two repos I will be providing a repo for creating factor models, which will include creation of security baskets based on a ranking system and optimization models to assign weights to securities, all of which will depend on the databases created using edgar_scraper and security_price repos. 
+I am also working on several other projects, which will be uploaded soon. Highly complementary to this repo will be a security price repo. Combining these two repos I will be providing a repo for creating factor models, which will include creation of security baskets based on a ranking system and optimization models to assign weights to securities, all of which will depend on the databases created using edgar-scraper and security-prices repos. Check out the security-price repo (https://github.com/razin11/security-prices). 
 
